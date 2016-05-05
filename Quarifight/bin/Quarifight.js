@@ -466,6 +466,65 @@ com_gloyer_libs_MouseController.prototype = $extend(EventEmitter.prototype,{
 	}
 	,__class__: com_gloyer_libs_MouseController
 });
+var com_gloyer_libs_TimerDelay = function() {
+	EventEmitter.call(this);
+	this.listTimerDelay = new haxe_ds_StringMap();
+};
+$hxClasses["com.gloyer.libs.TimerDelay"] = com_gloyer_libs_TimerDelay;
+com_gloyer_libs_TimerDelay.__name__ = ["com","gloyer","libs","TimerDelay"];
+com_gloyer_libs_TimerDelay.getInstance = function() {
+	if(com_gloyer_libs_TimerDelay.instance == null) com_gloyer_libs_TimerDelay.instance = new com_gloyer_libs_TimerDelay();
+	return com_gloyer_libs_TimerDelay.instance;
+};
+com_gloyer_libs_TimerDelay.__super__ = EventEmitter;
+com_gloyer_libs_TimerDelay.prototype = $extend(EventEmitter.prototype,{
+	startDelay: function(pNameEvent,pDurationMs,pCallback) {
+		var lNameEvent = "TIMER DELAY EVENT" + " " + pNameEvent;
+		var value = { timer : this.createTimerDelay(lNameEvent,pDurationMs,pCallback), startTimestampMs : this.getStampInMillisecond(), durationMs : pDurationMs};
+		this.listTimerDelay.set(lNameEvent,value);
+		if(pCallback != null) this.listTimerDelay.get(lNameEvent).callback = pCallback;
+		return lNameEvent;
+	}
+	,createTimerDelay: function(pNameEvent,pDurationMs,pCallback) {
+		var _g = this;
+		var lDelay = haxe_Timer.delay(function() {
+			if(_g.listTimerDelay.get(pNameEvent).callback != null) _g.listTimerDelay.get(pNameEvent).callback();
+			_g.emit(pNameEvent);
+			_g.listTimerDelay.remove(pNameEvent);
+		},pDurationMs);
+		return lDelay;
+	}
+	,pauseAllDelay: function() {
+		var lNameDelay;
+		var lDelay;
+		var $it0 = this.listTimerDelay.keys();
+		while( $it0.hasNext() ) {
+			var lNameDelay1 = $it0.next();
+			lDelay = this.listTimerDelay.get(lNameDelay1);
+			lDelay.timer.stop();
+			lDelay.timer = null;
+		}
+	}
+	,resumeAllDelay: function() {
+		var lNameDelay;
+		var lDelay;
+		var $it0 = this.listTimerDelay.keys();
+		while( $it0.hasNext() ) {
+			var lNameDelay1 = $it0.next();
+			lDelay = this.listTimerDelay.get(lNameDelay1);
+			var pNewDurationDelay = Math.round(lDelay.durationMs - (this.getStampInMillisecond() - lDelay.startTimestampMs));
+			console.log(pNewDurationDelay);
+			lDelay.timer = this.createTimerDelay(lNameDelay1,pNewDurationDelay,lDelay.callback);
+		}
+	}
+	,getStampInMillisecond: function() {
+		return Std["int"](haxe_Timer.stamp() * 1000);
+	}
+	,destroy: function() {
+		com_gloyer_libs_TimerDelay.instance = null;
+	}
+	,__class__: com_gloyer_libs_TimerDelay
+});
 var com_gloyer_quarifight_Main = function() {
 	EventEmitter.call(this);
 	var lOptions = { };
@@ -590,6 +649,14 @@ com_gloyer_quarifight_game_LevelManager.prototype = {
 	,start: function() {
 		this.startLevel(1);
 		this.container.addChild(this.currentBackground);
+		console.log("Start timer");
+		com_gloyer_libs_TimerDelay.getInstance().startDelay("Test",2000,function() {
+			console.log("Bonjour");
+		});
+		com_gloyer_libs_TimerDelay.getInstance().pauseAllDelay();
+		haxe_Timer.delay(function() {
+			com_gloyer_libs_TimerDelay.getInstance().resumeAllDelay();
+		},1000);
 		com_gloyer_libs_MouseController.getInstance().start(com_isartdigital_utils_game_GameStage.getInstance().getGameContainer());
 		this.initEvent();
 	}
@@ -2682,6 +2749,35 @@ haxe_IMap.__name__ = ["haxe","IMap"];
 haxe_IMap.prototype = {
 	__class__: haxe_IMap
 };
+var haxe_Timer = function(time_ms) {
+	var me = this;
+	this.id = setInterval(function() {
+		me.run();
+	},time_ms);
+};
+$hxClasses["haxe.Timer"] = haxe_Timer;
+haxe_Timer.__name__ = ["haxe","Timer"];
+haxe_Timer.delay = function(f,time_ms) {
+	var t = new haxe_Timer(time_ms);
+	t.run = function() {
+		t.stop();
+		f();
+	};
+	return t;
+};
+haxe_Timer.stamp = function() {
+	return new Date().getTime() / 1000;
+};
+haxe_Timer.prototype = {
+	stop: function() {
+		if(this.id == null) return;
+		clearInterval(this.id);
+		this.id = null;
+	}
+	,run: function() {
+	}
+	,__class__: haxe_Timer
+};
 var haxe_ds_ArraySort = function() { };
 $hxClasses["haxe.ds.ArraySort"] = haxe_ds_ArraySort;
 haxe_ds_ArraySort.__name__ = ["haxe","ds","ArraySort"];
@@ -3520,6 +3616,7 @@ com_gloyer_libs_MouseController.MOUSE_DOWN_EVENT = "MOUSE DOWN EVENT";
 com_gloyer_libs_MouseController.MOUSE_CLICK_EVENT = "MOUSE CLICK EVENT";
 com_gloyer_libs_MouseController.MOUSE_UP_EVENT = "MOUSE UP EVENT";
 com_gloyer_libs_MouseController.MAX_MOUSE_MOVEMENT_SCROLL = 10;
+com_gloyer_libs_TimerDelay.TIMER_DELAY_EVENT = "TIMER DELAY EVENT";
 com_gloyer_quarifight_Main.configPath = "config.json";
 com_isartdigital_utils_game_StateGraphic.animAlpha = 1;
 com_isartdigital_utils_game_StateGraphic.boxAlpha = 0;

@@ -1,8 +1,10 @@
 package com.gloyer.quarifight.game;
+import com.gloyer.libs.TimerDelay;
 import com.gloyer.quarifight.game.sprites.Eat;
 import com.gloyer.quarifight.game.sprites.LevelBackground;
 import com.gloyer.libs.MouseController;
 import com.isartdigital.utils.game.GameStage;
+import haxe.Timer;
 import pixi.core.display.Container;
 import pixi.core.math.Point;
 import pixi.interaction.EventTarget;
@@ -49,6 +51,33 @@ class LevelManager
 	public function start():Void {
 		startLevel(1);
 		container.addChild(currentBackground);
+		
+		trace("Start timer");
+		TimerDelay.getInstance().startDelay("Test", 2000, function () {
+			trace("Bonjour");
+		});
+		
+		TimerDelay.getInstance().pauseAllDelay();
+		
+		Timer.delay(function () {
+			TimerDelay.getInstance().resumeAllDelay();			
+		}, 1000);
+		
+		//var lNameEvent:String = TimerDelay.getInstance().startDelay("test", 2000);
+		//TimerDelay.getInstance().on(lNameEvent, function(pEvent:Dynamic) {
+			//trace("Bonjour");
+		//});
+		//
+		//TimerDelay.getInstance().pauseAllDelay();
+		//
+		//Timer.delay(function () {
+			//TimerDelay.getInstance().resumeAllDelay();			
+		//}, 1000);
+		
+		
+		//var lTest:Timer = Timer.delay(test, 10000);
+		//lTest.run();
+		
 		//
 		//var eat:Eat = new Eat(1);
 		//container.addChild(eat);
@@ -60,6 +89,7 @@ class LevelManager
 		initEvent();
 		
 	}
+	
 	
 	private function startLevel(pLevel:Int):Void {
 		currentLevel = pLevel;

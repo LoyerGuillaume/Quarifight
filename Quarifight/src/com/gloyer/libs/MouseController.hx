@@ -30,7 +30,11 @@ class MouseController extends EventEmitter
 	 * Nombre d'appelle à l'event move lors d'un drag
 	 */
 	public var numberOfMovementScroll:Int = 0;
-	private static inline var MAX_MOUSE_MOVEMENT_SCROLL:Int = 10; // FIXME Sensé être dans ConstructManager
+	
+	/**
+	 * Nombre d'appelle max, avant de considèrer le clic comme un scroll
+	 */
+	private static inline var MAX_MOUSE_MOVEMENT_SCROLL:Int = 10;
 	
 	
 	/**
@@ -63,11 +67,6 @@ class MouseController extends EventEmitter
 	public function start(pContainer:Container):Void {
 		setContainer(pContainer);
 		initEventDesktop();
-		
-		//GameStage.getInstance().on(TouchEventType.TOUCH_MOVE, onMove);
-		//GameStage.getInstance().on(TouchEventType.TOUCH_END_OUTSIDE, onMouseOut);
-		//GameStage.getInstance().on(TouchEventType.TOUCH_START, onMouseDown);
-		//GameView.getInstance().on(TouchEventType.TAP, onMouseClick);
 	}
 	
 	private function initEventDesktop():Void {
@@ -94,7 +93,6 @@ class MouseController extends EventEmitter
 		currentPosition = new Point(positionMouse.x, positionMouse.y);
 		
 		container.on(MouseEventType.MOUSE_UP, onMouseUp);
-		//GameStage.getInstance().on(TouchEventType.TOUCH_END, onMouseUp);
 		emit(MOUSE_DOWN_EVENT);
 	}
 	
@@ -109,7 +107,6 @@ class MouseController extends EventEmitter
 	private function onMouseUp(pEvent:EventTarget):Void {
 		isMouseDown = false;
 		container.off(MouseEventType.MOUSE_UP, onMouseUp);
-		//GameStage.getInstance().off(TouchEventType.TOUCH_END, onMouseUp);
 		emit(MOUSE_UP_EVENT);
 	}
 	
