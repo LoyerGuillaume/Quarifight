@@ -1,0 +1,38 @@
+DANS FLASH PRO:
+-Pour un champ texte directement enfant d'un screen ou Popin:
+	-Le nom du calque ou se trouve le texte doit comporter l'extension _txt
+	-Le nom du calque doit correspondre à un nom de classe du projet Haxe
+	
+-Pour un champ texte dans un bouton:
+	-le calque _txt doit comprendre deux calques:
+		-Un calque avec le champ texte comprenant "LABEL_nomdutexte" OBLIGATOIREMENT coché en invisible
+		-un calque avec un champ texte vide dont la taille ne dépasse pas celui du premier
+
+-Pour les deux:
+	-Les infos du champ texte (couleur, alignement, font, etc...) seront automatiquement exportés en code
+	-Le champ texte ne dois PAS être configuré en multi-ligne dans flashPro
+
+
+EXPORT:
+-La publication doit se faire deux fois:
+	1° : -Aller dans File>Paramètres de publications> cocher la case "intégrer les calques invisibles".
+	     -Compiler (ctrl + entré), enregistrer le fichier textUI.json dans bin/assets
+	
+	2° : -décocher la case "intégrer les calques invisibles"
+	     -Compiler, NE PAS enregistrer le fichier textUI.json
+
+
+-Ouvrir builder.flump
+-cliquer sur Export All (ou export modified)
+-executer le fichier save.bat
+
+
+
+LOCALIZATION (obligatoire sinon bug):
+-Ajouter un champ ayant pour nom "LABEL_nomdunouveautexte"
+-Faire la même chose que pour les champs existants
+-Si on veut plusieurs pages des textes ils faut les séparer par des virgules, ex:
+"LABEL_MONTEXTE" : {
+		"fr": ["frpage1", "frpage2", "frpage3"],
+		"en": ["enpage1", "enpage2", "enpage3"]
+	},

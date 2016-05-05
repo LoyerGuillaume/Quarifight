@@ -1,0 +1,22 @@
+{
+	"gameName":"Builder0",
+	"version":"0.1.0",
+	"debug":true,
+	"fps":true,
+	"qrcode":false,
+	"language":"fr",
+	"languages":["en","fr"],
+	"txtsPath":"assets/",
+	"assetsPath":"assets/",
+	"soundsPath":"assets/sounds/",
+	"fontsPath":"fonts/",
+	"langPath":"localization/",
+	
+	"cheat":true,
+	"boxAlpha":0.5,
+	"animAlpha":1,
+	"texture":"hd",
+	
+	"test":"test of a custom data"
+
+}

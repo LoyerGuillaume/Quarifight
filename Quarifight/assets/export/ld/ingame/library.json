@@ -1,0 +1,340 @@
+{
+ "isNamespaced": false,
+ "textureGroups": [
+  {
+   "atlases": [
+    {
+     "file": "atlas0.png",
+     "textures": [
+      {
+       "origin": [
+        247.5,
+        185.6
+       ],
+       "rect": [
+        1,
+        1,
+        495,
+        372
+       ],
+       "symbol": "bg_01"
+      },
+      {
+       "origin": [
+        2.5,
+        1.75
+       ],
+       "rect": [
+        498,
+        1,
+        5,
+        4
+       ],
+       "symbol": "eat_06"
+      },
+      {
+       "origin": [
+        2.4,
+        1.75
+       ],
+       "rect": [
+        505,
+        1,
+        5,
+        4
+       ],
+       "symbol": "eat_07"
+      },
+      {
+       "origin": [
+        2.25,
+        1.6
+       ],
+       "rect": [
+        498,
+        7,
+        5,
+        4
+       ],
+       "symbol": "eat_04"
+      },
+      {
+       "origin": [
+        2.4,
+        1.75
+       ],
+       "rect": [
+        505,
+        7,
+        5,
+        4
+       ],
+       "symbol": "eat_05"
+      },
+      {
+       "origin": [
+        2.1,
+        1.75
+       ],
+       "rect": [
+        498,
+        13,
+        5,
+        4
+       ],
+       "symbol": "eat_08"
+      },
+      {
+       "origin": [
+        2.6,
+        1.4
+       ],
+       "rect": [
+        505,
+        13,
+        6,
+        3
+       ],
+       "symbol": "eat_01"
+      },
+      {
+       "origin": [
+        2.25,
+        1.5
+       ],
+       "rect": [
+        505,
+        18,
+        5,
+        3
+       ],
+       "symbol": "eat_03"
+      },
+      {
+       "origin": [
+        2.4,
+        1.5
+       ],
+       "rect": [
+        498,
+        19,
+        5,
+        3
+       ],
+       "symbol": "eat_09"
+      },
+      {
+       "origin": [
+        2.5,
+        1.4
+       ],
+       "rect": [
+        505,
+        23,
+        5,
+        3
+       ],
+       "symbol": "eat_10"
+      },
+      {
+       "origin": [
+        2.4,
+        1.4
+       ],
+       "rect": [
+        498,
+        24,
+        5,
+        3
+       ],
+       "symbol": "eat_02"
+      }
+     ]
+    }
+   ],
+   "scaleFactor": 1
+  }
+ ],
+ "movies": [
+  {
+   "layers": [
+    {
+     "keyframes": [
+      {
+       "tweened": false,
+       "duration": 1,
+       "ref": "eat_01",
+       "scale": [
+        4.2857,
+        4.088
+       ],
+       "pivot": [
+        2.625,
+        1.375
+       ],
+       "index": 0
+      },
+      {
+       "tweened": false,
+       "duration": 1,
+       "ref": "eat_02",
+       "scale": [
+        4.0895,
+        4.0909
+       ],
+       "pivot": [
+        2.375,
+        1.375
+       ],
+       "index": 1
+      },
+      {
+       "tweened": false,
+       "duration": 1,
+       "ref": "eat_03",
+       "scale": [
+        3.75,
+        3.75
+       ],
+       "pivot": [
+        2.25,
+        1.5
+       ],
+       "index": 2
+      },
+      {
+       "tweened": false,
+       "duration": 1,
+       "ref": "eat_04",
+       "scale": [
+        3.4611,
+        3.4615
+       ],
+       "pivot": [
+        2.25,
+        1.625
+       ],
+       "index": 3
+      },
+      {
+       "tweened": false,
+       "duration": 1,
+       "ref": "eat_05",
+       "scale": [
+        3.2132,
+        3.2143
+       ],
+       "pivot": [
+        2.375,
+        1.75
+       ],
+       "index": 4
+      },
+      {
+       "loc": [
+        -0.0125,
+        0
+       ],
+       "duration": 1,
+       "ref": "eat_06",
+       "scale": [
+        3.2125,
+        3.2143
+       ],
+       "tweened": false,
+       "pivot": [
+        2.5,
+        1.75
+       ],
+       "index": 5
+      },
+      {
+       "tweened": false,
+       "duration": 1,
+       "ref": "eat_07",
+       "scale": [
+        3.2132,
+        3.2143
+       ],
+       "pivot": [
+        2.375,
+        1.75
+       ],
+       "index": 6
+      },
+      {
+       "tweened": false,
+       "duration": 1,
+       "ref": "eat_08",
+       "scale": [
+        3.2118,
+        3.2143
+       ],
+       "pivot": [
+        2.125,
+        1.75
+       ],
+       "index": 7
+      },
+      {
+       "loc": [
+        -0.0125,
+        0
+       ],
+       "duration": 1,
+       "ref": "eat_09",
+       "scale": [
+        3.75,
+        3.75
+       ],
+       "tweened": false,
+       "pivot": [
+        2.375,
+        1.5
+       ],
+       "index": 8
+      },
+      {
+       "tweened": false,
+       "duration": 1,
+       "ref": "eat_10",
+       "scale": [
+        4.09,
+        4.0909
+       ],
+       "pivot": [
+        2.5,
+        1.375
+       ],
+       "index": 9
+      }
+     ],
+     "name": "Calque 1"
+    }
+   ],
+   "id": "Eat_lvl1"
+  },
+  {
+   "layers": [
+    {
+     "keyframes": [
+      {
+       "tweened": false,
+       "pivot": [
+        247.5,
+        185.625
+       ],
+       "duration": 1,
+       "index": 0,
+       "ref": "bg_01"
+      }
+     ],
+     "name": "Calque 1"
+    }
+   ],
+   "id": "LevelBackground_1"
+  }
+ ],
+ "md5": "109d783782d8527204082c4a14c56cd4",
+ "frameRate": 30
+}

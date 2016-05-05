@@ -1,0 +1,55 @@
+{
+  "exportDir": "../export",
+  "importDir": "../../../../../DEV/GIT_HUB/Insaniquarium/assets/flump",
+  "fileVersion": 2,
+  "exports": [
+    {
+      "maxAtlasSize": 4096,
+      "scale": 1,
+      "format": "JSON",
+      "prettyPrint": true,
+      "combine": false,
+      "scaleFactors": [
+        1
+      ],
+      "quality": "best",
+      "optimize": "Speed",
+      "name": "hd",
+      "textureBorder": 1,
+      "description": "'hd' (JSON, 100%, @1x)",
+      "scaleFactorsString": "1"
+    },
+    {
+      "maxAtlasSize": 2048,
+      "scale": 0.5,
+      "format": "JSON",
+      "prettyPrint": true,
+      "combine": false,
+      "scaleFactors": [
+        1
+      ],
+      "quality": "best",
+      "optimize": "Speed",
+      "name": "md",
+      "textureBorder": 1,
+      "description": "'md' (JSON, 50%, @1x)",
+      "scaleFactorsString": "1"
+    },
+    {
+      "maxAtlasSize": 1024,
+      "scale": 0.25,
+      "format": "JSON",
+      "prettyPrint": true,
+      "combine": false,
+      "scaleFactors": [
+        1
+      ],
+      "quality": "best",
+      "optimize": "Speed",
+      "name": "ld",
+      "textureBorder": 1,
+      "description": "'ld' (JSON, 25%, @1x)",
+      "scaleFactorsString": "1"
+    }
+  ]
+}

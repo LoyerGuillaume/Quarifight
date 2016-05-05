@@ -1,0 +1,340 @@
+{
+ "isNamespaced": false,
+ "textureGroups": [
+  {
+   "atlases": [
+    {
+     "file": "atlas0.png",
+     "textures": [
+      {
+       "origin": [
+        990,
+        742.5
+       ],
+       "rect": [
+        1,
+        1,
+        1980,
+        1485
+       ],
+       "symbol": "bg_01"
+      },
+      {
+       "origin": [
+        10,
+        7
+       ],
+       "rect": [
+        1983,
+        1,
+        20,
+        14
+       ],
+       "symbol": "eat_06"
+      },
+      {
+       "origin": [
+        9.5,
+        7
+       ],
+       "rect": [
+        2005,
+        1,
+        19,
+        14
+       ],
+       "symbol": "eat_07"
+      },
+      {
+       "origin": [
+        9.5,
+        7
+       ],
+       "rect": [
+        2026,
+        1,
+        19,
+        14
+       ],
+       "symbol": "eat_05"
+      },
+      {
+       "origin": [
+        8.5,
+        7
+       ],
+       "rect": [
+        1983,
+        17,
+        17,
+        14
+       ],
+       "symbol": "eat_08"
+      },
+      {
+       "origin": [
+        9,
+        6.5
+       ],
+       "rect": [
+        2002,
+        17,
+        18,
+        13
+       ],
+       "symbol": "eat_04"
+      },
+      {
+       "origin": [
+        10.5,
+        5.5
+       ],
+       "rect": [
+        2022,
+        17,
+        21,
+        11
+       ],
+       "symbol": "eat_01"
+      },
+      {
+       "origin": [
+        9.5,
+        6
+       ],
+       "rect": [
+        2022,
+        30,
+        19,
+        12
+       ],
+       "symbol": "eat_09"
+      },
+      {
+       "origin": [
+        10,
+        5.5
+       ],
+       "rect": [
+        1983,
+        33,
+        20,
+        11
+       ],
+       "symbol": "eat_10"
+      },
+      {
+       "origin": [
+        9,
+        6
+       ],
+       "rect": [
+        2005,
+        44,
+        18,
+        12
+       ],
+       "symbol": "eat_03"
+      },
+      {
+       "origin": [
+        9.5,
+        5.5
+       ],
+       "rect": [
+        1983,
+        46,
+        19,
+        11
+       ],
+       "symbol": "eat_02"
+      }
+     ]
+    }
+   ],
+   "scaleFactor": 1
+  }
+ ],
+ "movies": [
+  {
+   "layers": [
+    {
+     "keyframes": [
+      {
+       "tweened": false,
+       "duration": 1,
+       "ref": "eat_01",
+       "scale": [
+        4.2857,
+        4.088
+       ],
+       "pivot": [
+        10.5,
+        5.5
+       ],
+       "index": 0
+      },
+      {
+       "tweened": false,
+       "duration": 1,
+       "ref": "eat_02",
+       "scale": [
+        4.0895,
+        4.0909
+       ],
+       "pivot": [
+        9.5,
+        5.5
+       ],
+       "index": 1
+      },
+      {
+       "tweened": false,
+       "duration": 1,
+       "ref": "eat_03",
+       "scale": [
+        3.75,
+        3.75
+       ],
+       "pivot": [
+        9,
+        6
+       ],
+       "index": 2
+      },
+      {
+       "tweened": false,
+       "duration": 1,
+       "ref": "eat_04",
+       "scale": [
+        3.4611,
+        3.4615
+       ],
+       "pivot": [
+        9,
+        6.5
+       ],
+       "index": 3
+      },
+      {
+       "tweened": false,
+       "duration": 1,
+       "ref": "eat_05",
+       "scale": [
+        3.2132,
+        3.2143
+       ],
+       "pivot": [
+        9.5,
+        7
+       ],
+       "index": 4
+      },
+      {
+       "loc": [
+        -0.05,
+        0
+       ],
+       "duration": 1,
+       "ref": "eat_06",
+       "scale": [
+        3.2125,
+        3.2143
+       ],
+       "tweened": false,
+       "pivot": [
+        10,
+        7
+       ],
+       "index": 5
+      },
+      {
+       "tweened": false,
+       "duration": 1,
+       "ref": "eat_07",
+       "scale": [
+        3.2132,
+        3.2143
+       ],
+       "pivot": [
+        9.5,
+        7
+       ],
+       "index": 6
+      },
+      {
+       "tweened": false,
+       "duration": 1,
+       "ref": "eat_08",
+       "scale": [
+        3.2118,
+        3.2143
+       ],
+       "pivot": [
+        8.5,
+        7
+       ],
+       "index": 7
+      },
+      {
+       "loc": [
+        -0.05,
+        0
+       ],
+       "duration": 1,
+       "ref": "eat_09",
+       "scale": [
+        3.75,
+        3.75
+       ],
+       "tweened": false,
+       "pivot": [
+        9.5,
+        6
+       ],
+       "index": 8
+      },
+      {
+       "tweened": false,
+       "duration": 1,
+       "ref": "eat_10",
+       "scale": [
+        4.09,
+        4.0909
+       ],
+       "pivot": [
+        10,
+        5.5
+       ],
+       "index": 9
+      }
+     ],
+     "name": "Calque 1"
+    }
+   ],
+   "id": "Eat_lvl1"
+  },
+  {
+   "layers": [
+    {
+     "keyframes": [
+      {
+       "tweened": false,
+       "pivot": [
+        990,
+        742.5
+       ],
+       "duration": 1,
+       "index": 0,
+       "ref": "bg_01"
+      }
+     ],
+     "name": "Calque 1"
+    }
+   ],
+   "id": "LevelBackground_1"
+  }
+ ],
+ "md5": "109d783782d8527204082c4a14c56cd4",
+ "frameRate": 30
+}
