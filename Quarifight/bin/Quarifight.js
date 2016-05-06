@@ -750,7 +750,7 @@ com_gloyer_quarifight_game_LevelManager.prototype = {
 	}
 	,destroyEat: function(pEat) {
 		HxOverrides.remove(this.listEat,pEat);
-		this.container.removeChild(pEat);
+		this.containerEat.removeChild(pEat);
 		pEat.destroy();
 	}
 	,gameLoopLevel: function() {

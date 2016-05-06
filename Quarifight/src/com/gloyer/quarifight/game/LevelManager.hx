@@ -122,7 +122,7 @@ class LevelManager
 	
 	public function destroyEat(pEat:Eat):Void {
 		listEat.remove(pEat);
-		container.removeChild(pEat);
+		containerEat.removeChild(pEat);
 		pEat.destroy();
 	}
 	
