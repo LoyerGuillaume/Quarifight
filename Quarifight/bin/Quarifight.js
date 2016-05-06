@@ -420,6 +420,30 @@ com_gloyer_libs_MathPerso.getRandomInt = function(pMin,pMax) {
 com_gloyer_libs_MathPerso.getRandomPoint = function(pMinX,pMaxX,pMinY,pMaxY) {
 	return new PIXI.Point(com_gloyer_libs_MathPerso.getRandomInt(pMinX,pMaxX),com_gloyer_libs_MathPerso.getRandomInt(pMinY,pMaxY));
 };
+com_gloyer_libs_MathPerso.getVectorBeetweenPosition = function(pStartPosition,pEndPosition) {
+	return com_gloyer_libs_MathPerso.soustractVector(pEndPosition,pStartPosition);
+};
+com_gloyer_libs_MathPerso.soustractVector = function(pA,pB) {
+	return new PIXI.Point(pA.x - pB.x,pA.y - pB.y);
+};
+com_gloyer_libs_MathPerso.normalizeVector = function(pVector) {
+	return com_gloyer_libs_MathPerso.multiplyVector(pVector,1 / com_gloyer_libs_MathPerso.getVectorLength(pVector));
+};
+com_gloyer_libs_MathPerso.multiplyVector = function(pVector,pNumber) {
+	return new PIXI.Point(pVector.x * pNumber,pVector.y * pNumber);
+};
+com_gloyer_libs_MathPerso.getVectorLength = function(pVector) {
+	return Math.sqrt(pVector.x * pVector.x + pVector.y * pVector.y);
+};
+com_gloyer_libs_MathPerso.additionVector = function(pA,pB) {
+	return new PIXI.Point(pA.x + pB.x,pA.y + pB.y);
+};
+com_gloyer_libs_MathPerso.clampVector = function(pVector,pTopLeft,pBottomRight) {
+	var lVector = pVector.clone();
+	if(lVector.x < pTopLeft.x) lVector.x = pTopLeft.x; else if(lVector.x > pBottomRight.x) lVector.x = pBottomRight.x;
+	if(lVector.y < pTopLeft.y) lVector.y = pTopLeft.y; else if(lVector.y > pBottomRight.y) lVector.y = pBottomRight.y;
+	return lVector;
+};
 var com_gloyer_libs_MouseController = function() {
 	this.numberOfMovementScroll = 0;
 	this.scrollingMode = false;
@@ -1036,15 +1060,15 @@ $hxClasses["com.gloyer.quarifight.game.sprites.Fish"] = com_gloyer_quarifight_ga
 com_gloyer_quarifight_game_sprites_Fish.__name__ = ["com","gloyer","quarifight","game","sprites","Fish"];
 com_gloyer_quarifight_game_sprites_Fish.__super__ = com_isartdigital_utils_game_StateGraphic;
 com_gloyer_quarifight_game_sprites_Fish.prototype = $extend(com_isartdigital_utils_game_StateGraphic.prototype,{
-	changeSpeedAnimation: function() {
-		(js_Boot.__cast(this.anim , pixi_display_FlumpMovie)).animationSpeed = 0.7;
+	changeSpeedAnimation: function(pSpeedAnimation) {
+		(js_Boot.__cast(this.anim , pixi_display_FlumpMovie)).animationSpeed = pSpeedAnimation;
 	}
 	,changeOrientation: function() {
 		this.anim.scale.x *= -1;
 	}
 	,startRandomTargetMovement: function() {
+		this.changeSpeedAnimation(0.8);
 		var lPositionTarget = this.getRandomPositionMovement();
-		console.log(lPositionTarget.x - this.x);
 		var nextOrientationIsLeft = lPositionTarget.x - this.x <= 0;
 		if(nextOrientationIsLeft != this.orientationLeft) {
 			this.changeOrientation();
@@ -1053,22 +1077,34 @@ com_gloyer_quarifight_game_sprites_Fish.prototype = $extend(com_isartdigital_uti
 		this.tweenMovement = TweenLite.fromTo(this,this.getRandomDurationMovement(),{ x : this.x, y : this.y},{ x : lPositionTarget.x, y : lPositionTarget.y, ease : Power1.easeInOut, onComplete : $bind(this,this.waitForMove)});
 	}
 	,waitForMove: function() {
+		this.changeSpeedAnimation(0.4);
 		com_gloyer_libs_TimerDelay.getInstance().startDelay("Movement Fish " + this.id,this.getRandomDurationWaitMovement(),$bind(this,this.startRandomTargetMovement));
 	}
 	,getRandomDurationWaitMovement: function() {
-		return com_gloyer_libs_MathPerso.getRandomInt(1,2) * 1000;
+		return com_gloyer_libs_MathPerso.getRandomInt(0.5,1.5) * 1000;
 	}
 	,getRandomDurationMovement: function() {
 		return com_gloyer_libs_MathPerso.getRandomFloat(3,6);
 	}
 	,getRandomPositionMovement: function() {
+		return this.movementRadius();
+	}
+	,movementRadius: function() {
+		var lPosition = com_gloyer_libs_MathPerso.getRandomPoint(-1200,1200,-450,500);
+		var vector = com_gloyer_libs_MathPerso.getVectorBeetweenPosition(this.position,lPosition);
+		var vectorNormalize = com_gloyer_libs_MathPerso.normalizeVector(vector);
+		var lNewPosition = com_gloyer_libs_MathPerso.additionVector(com_gloyer_libs_MathPerso.multiplyVector(vectorNormalize,com_gloyer_libs_MathPerso.getRandomFloat(50,500)),this.position);
+		lNewPosition = com_gloyer_libs_MathPerso.clampVector(lNewPosition,new PIXI.Point(-1200,-450),new PIXI.Point(1200,500));
+		return lNewPosition;
+	}
+	,movementStandard: function() {
 		var lPosition = com_gloyer_libs_MathPerso.getRandomPoint(-1200,1200,-450,500);
 		return lPosition;
 	}
 	,start: function() {
 		com_isartdigital_utils_game_StateGraphic.prototype.start.call(this);
 		this.startRandomTargetMovement();
-		this.changeSpeedAnimation();
+		this.changeSpeedAnimation(0.8);
 	}
 	,setModeNormal: function() {
 		this.setState("lvl" + this.level,true);
@@ -3811,16 +3847,19 @@ com_gloyer_quarifight_game_sprites_Eat.DURATION_ALIVE = 8;
 com_gloyer_quarifight_game_sprites_Eat.DURATION_ALPHA_ZERO = 1;
 com_gloyer_quarifight_game_sprites_Eat.SPEED_ANIMATION = 0.7;
 com_gloyer_quarifight_game_sprites_Fish.idFish = 0;
-com_gloyer_quarifight_game_sprites_Fish.SPEED_ANIMATION = 0.7;
+com_gloyer_quarifight_game_sprites_Fish.WAIT_SPEED_ANIMATION = 0.4;
+com_gloyer_quarifight_game_sprites_Fish.SWIM_SPEED_ANIMATION = 0.8;
 com_gloyer_quarifight_game_sprites_Fish.DEFAULT_SCALE = 0.8;
 com_gloyer_quarifight_game_sprites_Fish.MIN_DURATION_MOVEMENT = 3;
 com_gloyer_quarifight_game_sprites_Fish.MAX_DURATION_MOVEMENT = 6;
-com_gloyer_quarifight_game_sprites_Fish.MIN_DURATION_WAIT_MOVEMENT = 1;
-com_gloyer_quarifight_game_sprites_Fish.MAX_DURATION_WAIT_MOVEMENT = 2;
+com_gloyer_quarifight_game_sprites_Fish.MIN_DURATION_WAIT_MOVEMENT = 0.5;
+com_gloyer_quarifight_game_sprites_Fish.MAX_DURATION_WAIT_MOVEMENT = 1.5;
 com_gloyer_quarifight_game_sprites_Fish.MIN_MOVEMENT_X = -1200;
 com_gloyer_quarifight_game_sprites_Fish.MIN_MOVEMENT_Y = -450;
 com_gloyer_quarifight_game_sprites_Fish.MAX_MOVEMENT_X = 1200;
 com_gloyer_quarifight_game_sprites_Fish.MAX_MOVEMENT_Y = 500;
+com_gloyer_quarifight_game_sprites_Fish.MIN_SPEED_MOVEMENT = 50;
+com_gloyer_quarifight_game_sprites_Fish.MAX_SPEED_MOVEMENT = 500;
 com_isartdigital_utils_Config.cache = true;
 com_isartdigital_utils_Config._data = { };
 com_isartdigital_utils_Debug.QR_SIZE = 0.35;
