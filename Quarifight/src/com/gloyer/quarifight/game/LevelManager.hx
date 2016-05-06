@@ -22,7 +22,11 @@ class LevelManager
 	 */
 	private static var instance: LevelManager;
 	
+	public static var DISTANCE_TOP_GROUND:Int = 500;
+	
 	private var container:Container;
+	
+	private var listEat:Array<Eat>;
 	
 	private var currentLevel:Int;
 	private var currentBackground:LevelBackground;
@@ -52,40 +56,7 @@ class LevelManager
 		startLevel(1);
 		container.addChild(currentBackground);
 		
-		trace("Start timer");
-		//TimerDelay.getInstance().on(TimerDelay.getInstance().startRepeaterDelay("Test", 2000), function (pEvent:Dynamic) {
-			//trace("Bonjour");
-		//});
-		//
-		//TimerDelay.getInstance().pauseAllDelay();
-		//
-		//Timer.delay(function () {
-			//TimerDelay.getInstance().resumeAllDelay();			
-		//}, 1000);
-		
-		//
-		//Timer.delay(function () {
-			//TimerDelay.getInstance().pauseAllDelay();
-			//Timer.delay(function () {
-				//TimerDelay.getInstance().resumeAllDelay();				
-			//}, 1000);
-		//}, 1000);
-		
-		var lNameEvent:String = TimerDelay.getInstance().startDelay("test", 5000);
-		TimerDelay.getInstance().on(lNameEvent, function(pEvent:Dynamic) {
-			trace("Bonjour");
-		});
-
-		TimerDelay.getInstance().startDelay("test2", 2000, function () {
-			TimerDelay.getInstance().pauseDelay(lNameEvent);
-			//TimerDelay.getInstance().pauseAllDelay();
-			TimerDelay.getInstance().startDelay("test3", 1000, function () {
-				TimerDelay.getInstance().resumeDelay(lNameEvent);				
-				//TimerDelay.getInstance().resumeAllDelay();				
-			});
-		});
-		
-		MouseController.getInstance().start(GameStage.getInstance().getGameContainer());
+		MouseController.getInstance().start(GameStage.getInstance().getGameContainer(), 100);
 		initEvent();
 		
 	}
@@ -93,7 +64,12 @@ class LevelManager
 	
 	private function startLevel(pLevel:Int):Void {
 		currentLevel = pLevel;
+		resetParamLevel();
 		changeBackground();
+	}
+	
+	private function resetParamLevel():Void {
+		listEat = new Array<Eat>();
 	}
 	
 	private function changeBackground():Void {
@@ -109,6 +85,20 @@ class LevelManager
 		container.addChild(eat);
 		eat.position.set(pPosition.x, pPosition.y);
 		eat.start();
+		listEat.push(eat);
+	}
+	
+	public function destroyEat(pEat:Eat):Void {
+		listEat.remove(pEat);
+		container.removeChild(pEat);
+		pEat.destroy();
+	}
+	
+	public function gameLoopLevel():Void {
+		var lEat:Eat;
+		for (lEat in listEat) {
+			lEat.doAction();
+		}
 	}
 	
 	/**

@@ -58,6 +58,7 @@ class GameManager
 	 * boucle de jeu (répétée à la cadence du jeu en fps)
 	 */
 	public function gameLoop (pEvent:EventTarget): Void {
+		LevelManager.getInstance().gameLoopLevel();
 		// le renderer possède une propriété plugins qui contient une propriété interaction de type InteractionManager
 		// les instances d'InteractionManager fournissent un certain nombre d'informations comme les coordonnées globales de la souris
 		//if (DeviceCapabilities.system==DeviceCapabilities.SYSTEM_DESKTOP) trace (CollisionManager.hitTestPoint(Template.getInstance().hitBox, cast(Main.getInstance().renderer.plugins.interaction,InteractionManager).mouse.global));

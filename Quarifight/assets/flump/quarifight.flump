@@ -1,0 +1,23 @@
+{
+  "importDir": "",
+  "fileVersion": 0,
+  "exports": [
+    {
+      "quality": "best",
+      "name": "default",
+      "prettyPrint": false,
+      "combine": false,
+      "format": "JSONZip",
+      "scaleFactors": [
+        1
+      ],
+      "optimize": "Speed",
+      "maxAtlasSize": 2048,
+      "textureBorder": 1,
+      "scale": 1,
+      "scaleFactorsString": "1",
+      "description": "'default' (JSONZip, 100%, @1x)"
+    }
+  ],
+  "exportDir": "../export"
+}

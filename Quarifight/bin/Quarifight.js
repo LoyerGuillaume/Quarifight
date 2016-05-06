@@ -56,6 +56,12 @@ HxOverrides.indexOf = function(a,obj,i) {
 	}
 	return -1;
 };
+HxOverrides.remove = function(a,obj) {
+	var i = HxOverrides.indexOf(a,obj,0);
+	if(i == -1) return false;
+	a.splice(i,1);
+	return true;
+};
 HxOverrides.iter = function(a) {
 	return { cur : 0, arr : a, hasNext : function() {
 		return this.cur < this.arr.length;
@@ -404,6 +410,7 @@ _$UInt_UInt_$Impl_$.toFloat = function(this1) {
 };
 var com_gloyer_libs_MouseController = function() {
 	this.numberOfMovementScroll = 0;
+	this.scrollingMode = false;
 	this.isMouseDown = false;
 	EventEmitter.call(this);
 };
@@ -415,7 +422,9 @@ com_gloyer_libs_MouseController.getInstance = function() {
 };
 com_gloyer_libs_MouseController.__super__ = EventEmitter;
 com_gloyer_libs_MouseController.prototype = $extend(EventEmitter.prototype,{
-	start: function(pContainer) {
+	start: function(pContainer,pMaxMouvementScroll) {
+		if(pMaxMouvementScroll == null) pMaxMouvementScroll = 10;
+		this.maxMouseMovementScroll = pMaxMouvementScroll;
 		this.setContainer(pContainer);
 		this.initEventDesktop();
 	}
@@ -441,7 +450,7 @@ com_gloyer_libs_MouseController.prototype = $extend(EventEmitter.prototype,{
 		this.emit("MOUSE DOWN EVENT");
 	}
 	,onMouseClick: function(pEvent) {
-		if(this.numberOfMovementScroll <= 10) {
+		if(this.numberOfMovementScroll <= this.maxMouseMovementScroll) {
 			var positionMouse = pEvent.data.getLocalPosition(this.container);
 			this.currentPosition = new PIXI.Point(positionMouse.x,positionMouse.y);
 			this.emit("MOUSE CLICK EVENT",this.currentPosition);
@@ -669,6 +678,7 @@ com_gloyer_quarifight_game_GameManager.prototype = {
 		com_gloyer_quarifight_Main.getInstance().on("gameLoop",$bind(this,this.gameLoop));
 	}
 	,gameLoop: function(pEvent) {
+		com_gloyer_quarifight_game_LevelManager.getInstance().gameLoopLevel();
 	}
 	,destroy: function() {
 		com_gloyer_quarifight_Main.getInstance().off("gameLoop",$bind(this,this.gameLoop));
@@ -692,23 +702,16 @@ com_gloyer_quarifight_game_LevelManager.prototype = {
 	,start: function() {
 		this.startLevel(1);
 		this.container.addChild(this.currentBackground);
-		console.log("Start timer");
-		var lNameEvent = com_gloyer_libs_TimerDelay.getInstance().startDelay("test",5000);
-		com_gloyer_libs_TimerDelay.getInstance().on(lNameEvent,function(pEvent) {
-			console.log("Bonjour");
-		});
-		com_gloyer_libs_TimerDelay.getInstance().startDelay("test2",2000,function() {
-			com_gloyer_libs_TimerDelay.getInstance().pauseDelay(lNameEvent);
-			com_gloyer_libs_TimerDelay.getInstance().startDelay("test3",1000,function() {
-				com_gloyer_libs_TimerDelay.getInstance().resumeDelay(lNameEvent);
-			});
-		});
-		com_gloyer_libs_MouseController.getInstance().start(com_isartdigital_utils_game_GameStage.getInstance().getGameContainer());
+		com_gloyer_libs_MouseController.getInstance().start(com_isartdigital_utils_game_GameStage.getInstance().getGameContainer(),100);
 		this.initEvent();
 	}
 	,startLevel: function(pLevel) {
 		this.currentLevel = pLevel;
+		this.resetParamLevel();
 		this.changeBackground();
+	}
+	,resetParamLevel: function() {
+		this.listEat = [];
 	}
 	,changeBackground: function() {
 		this.currentBackground = new com_gloyer_quarifight_game_sprites_LevelBackground(this.currentLevel);
@@ -721,6 +724,22 @@ com_gloyer_quarifight_game_LevelManager.prototype = {
 		this.container.addChild(eat);
 		eat.position.set(pPosition.x,pPosition.y);
 		eat.start();
+		this.listEat.push(eat);
+	}
+	,destroyEat: function(pEat) {
+		HxOverrides.remove(this.listEat,pEat);
+		this.container.removeChild(pEat);
+		pEat.destroy();
+	}
+	,gameLoopLevel: function() {
+		var lEat;
+		var _g = 0;
+		var _g1 = this.listEat;
+		while(_g < _g1.length) {
+			var lEat1 = _g1[_g];
+			++_g;
+			lEat1.doAction();
+		}
 	}
 	,destroy: function() {
 		com_gloyer_quarifight_game_LevelManager.instance = null;
@@ -928,12 +947,25 @@ var com_gloyer_quarifight_game_sprites_Eat = function(pLevel) {
 	this.factory = new com_isartdigital_utils_game_factory_FlumpMovieAnimFactory();
 	this.level = pLevel;
 	this.scale = new PIXI.Point(com_gloyer_quarifight_game_sprites_Eat.DEFAULT_SCALE,com_gloyer_quarifight_game_sprites_Eat.DEFAULT_SCALE);
+	com_gloyer_libs_TimerDelay.getInstance().startDelay("startDestroyEat" + com_gloyer_quarifight_game_sprites_Eat.idEat++,com_gloyer_quarifight_game_sprites_Eat.DURATION_ALIVE * 1000,$bind(this,this.startDestroyEat));
 };
 $hxClasses["com.gloyer.quarifight.game.sprites.Eat"] = com_gloyer_quarifight_game_sprites_Eat;
 com_gloyer_quarifight_game_sprites_Eat.__name__ = ["com","gloyer","quarifight","game","sprites","Eat"];
 com_gloyer_quarifight_game_sprites_Eat.__super__ = com_isartdigital_utils_game_StateGraphic;
 com_gloyer_quarifight_game_sprites_Eat.prototype = $extend(com_isartdigital_utils_game_StateGraphic.prototype,{
-	setModeNormal: function() {
+	startDestroyEat: function() {
+		var lTween = TweenLite.fromTo(this,com_gloyer_quarifight_game_sprites_Eat.DURATION_ALPHA_ZERO,{ alpha : 1},{ alpha : 0, ease : Power0.easeIn, onComplete : $bind(this,this.destroyMe)});
+	}
+	,destroyMe: function() {
+		com_gloyer_quarifight_game_LevelManager.getInstance().destroyEat(this);
+	}
+	,fall: function() {
+		if(this.y < com_gloyer_quarifight_game_LevelManager.DISTANCE_TOP_GROUND) this.position.y += com_gloyer_quarifight_game_sprites_Eat.SPEED_FALL;
+	}
+	,doActionNormal: function() {
+		this.fall();
+	}
+	,setModeNormal: function() {
 		this.setState("lvl" + this.level,true);
 		com_isartdigital_utils_game_StateGraphic.prototype.setModeNormal.call(this);
 	}
@@ -3661,12 +3693,17 @@ com_gloyer_libs_MouseController.MOUSE_DOWN_MOVE_EVENT = "MOUSE DOWN MOVE EVENT";
 com_gloyer_libs_MouseController.MOUSE_DOWN_EVENT = "MOUSE DOWN EVENT";
 com_gloyer_libs_MouseController.MOUSE_CLICK_EVENT = "MOUSE CLICK EVENT";
 com_gloyer_libs_MouseController.MOUSE_UP_EVENT = "MOUSE UP EVENT";
-com_gloyer_libs_MouseController.MAX_MOUSE_MOVEMENT_SCROLL = 10;
+com_gloyer_libs_MouseController.MAX_MOUSE_MOVEMENT_SCROLL_DEFAULT = 10;
 com_gloyer_libs_TimerDelay.TIMER_DELAY_EVENT = "TIMER DELAY EVENT";
 com_gloyer_quarifight_Main.configPath = "config.json";
+com_gloyer_quarifight_game_LevelManager.DISTANCE_TOP_GROUND = 500;
 com_isartdigital_utils_game_StateGraphic.animAlpha = 1;
 com_isartdigital_utils_game_StateGraphic.boxAlpha = 0;
+com_gloyer_quarifight_game_sprites_Eat.idEat = 0;
 com_gloyer_quarifight_game_sprites_Eat.DEFAULT_SCALE = 1;
+com_gloyer_quarifight_game_sprites_Eat.SPEED_FALL = 2;
+com_gloyer_quarifight_game_sprites_Eat.DURATION_ALIVE = 8;
+com_gloyer_quarifight_game_sprites_Eat.DURATION_ALPHA_ZERO = 1;
 com_isartdigital_utils_Config.cache = true;
 com_isartdigital_utils_Config._data = { };
 com_isartdigital_utils_Debug.QR_SIZE = 0.35;

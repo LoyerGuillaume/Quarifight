@@ -18,6 +18,8 @@ class MouseController extends EventEmitter
 	
 	private var isMouseDown:Bool = false;
 	
+	private var scrollingMode:Bool = false;
+	
 	public static inline var MOUSE_MOVE_EVENT:String = "MOUSE MOVE EVENT";
 	public static inline var MOUSE_DOWN_MOVE_EVENT:String = "MOUSE DOWN MOVE EVENT";
 	public static inline var MOUSE_DOWN_EVENT:String = "MOUSE DOWN EVENT";
@@ -34,7 +36,8 @@ class MouseController extends EventEmitter
 	/**
 	 * Nombre d'appelle max, avant de considèrer le clic comme un scroll
 	 */
-	private static inline var MAX_MOUSE_MOVEMENT_SCROLL:Int = 10;
+	private static inline var MAX_MOUSE_MOVEMENT_SCROLL_DEFAULT:Int = 10;
+	private var maxMouseMovementScroll:Int;
 	
 	
 	/**
@@ -64,7 +67,8 @@ class MouseController extends EventEmitter
 	/**
 	 * Initialise les events de la souris
 	 */
-	public function start(pContainer:Container):Void {
+	public function start(pContainer:Container, ?pMaxMouvementScroll:Int = MAX_MOUSE_MOVEMENT_SCROLL_DEFAULT):Void {
+		maxMouseMovementScroll = pMaxMouvementScroll;
 		setContainer(pContainer);
 		initEventDesktop();
 	}
@@ -97,7 +101,7 @@ class MouseController extends EventEmitter
 	}
 	
 	private function onMouseClick(pEvent:EventTarget):Void { // FIXME
-		if (numberOfMovementScroll <= MAX_MOUSE_MOVEMENT_SCROLL) {
+		if (numberOfMovementScroll <= maxMouseMovementScroll) {
 			var positionMouse:Point = pEvent.data.getLocalPosition(container);
 			currentPosition = new Point(positionMouse.x, positionMouse.y);
 			emit(MOUSE_CLICK_EVENT, currentPosition);
