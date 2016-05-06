@@ -1,22 +1,54 @@
 {
   "importDir": "",
-  "fileVersion": 0,
+  "fileVersion": 2,
   "exports": [
     {
       "quality": "best",
-      "name": "default",
-      "prettyPrint": false,
-      "combine": false,
-      "format": "JSONZip",
       "scaleFactors": [
         1
       ],
+      "name": "hd",
+      "optimize": "Speed",
+      "maxAtlasSize": 4096,
+      "textureBorder": 1,
+      "format": "JSON",
+      "combine": false,
+      "prettyPrint": true,
+      "scale": 1,
+      "scaleFactorsString": "1",
+      "description": "'hd' (JSON, 100%, @1x)"
+    },
+    {
+      "quality": "best",
+      "scaleFactors": [
+        1
+      ],
+      "name": "md",
       "optimize": "Speed",
       "maxAtlasSize": 2048,
       "textureBorder": 1,
-      "scale": 1,
+      "format": "JSON",
+      "combine": false,
+      "prettyPrint": true,
+      "scale": 0.5,
       "scaleFactorsString": "1",
-      "description": "'default' (JSONZip, 100%, @1x)"
+      "description": "'md' (JSON, 50%, @1x)"
+    },
+    {
+      "quality": "best",
+      "scaleFactors": [
+        1
+      ],
+      "name": "ld",
+      "optimize": "Speed",
+      "maxAtlasSize": 1024,
+      "textureBorder": 1,
+      "format": "JSON",
+      "combine": false,
+      "prettyPrint": true,
+      "scale": 0.25,
+      "scaleFactorsString": "1",
+      "description": "'ld' (JSON, 25%, @1x)"
     }
   ],
   "exportDir": "../export"

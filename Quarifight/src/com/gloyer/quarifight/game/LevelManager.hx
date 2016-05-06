@@ -1,6 +1,7 @@
 package com.gloyer.quarifight.game;
 import com.gloyer.libs.TimerDelay;
 import com.gloyer.quarifight.game.sprites.Eat;
+import com.gloyer.quarifight.game.sprites.Fish;
 import com.gloyer.quarifight.game.sprites.LevelBackground;
 import com.gloyer.libs.MouseController;
 import com.isartdigital.utils.game.GameStage;
@@ -25,8 +26,11 @@ class LevelManager
 	public static var DISTANCE_TOP_GROUND:Int = 500;
 	
 	private var container:Container;
+	private var containerEat:Container;
+	private var containerFish:Container;
 	
 	private var listEat:Array<Eat>;
+	private var listFish:Array<Fish>;
 	
 	private var currentLevel:Int;
 	private var currentBackground:LevelBackground;
@@ -45,7 +49,9 @@ class LevelManager
 	 */
 	private function new() 
 	{
-		container = new Container();
+		container     = new Container();
+		containerEat  = new Container();
+		containerFish = new Container();
 	}
 	
 	public function getContainer():Container {
@@ -54,11 +60,24 @@ class LevelManager
 	
 	public function start():Void {
 		startLevel(1);
-		container.addChild(currentBackground);
+
+		initContainer();
+
+		test();
 		
 		MouseController.getInstance().start(GameStage.getInstance().getGameContainer(), 100);
 		initEvent();
+	}
+	
+	private function test():Void {
+		addFish(new Point(50, 50));
 		
+	}
+	
+	private function initContainer():Void {
+		container.addChild(currentBackground);
+		container.addChild(containerEat);
+		container.addChild(containerFish);
 	}
 	
 	
@@ -70,6 +89,7 @@ class LevelManager
 	
 	private function resetParamLevel():Void {
 		listEat = new Array<Eat>();
+		listFish = new Array<Fish>();
 	}
 	
 	private function changeBackground():Void {
@@ -81,11 +101,23 @@ class LevelManager
 	}
 	
 	private function clickInLevel(pPosition:Point):Void {
+		addEat(pPosition);
+	}
+	
+	private function addEat(pPosition:Point):Void {
 		var eat:Eat = new Eat(1);
-		container.addChild(eat);
+		containerEat.addChild(eat);
 		eat.position.set(pPosition.x, pPosition.y);
 		eat.start();
 		listEat.push(eat);
+	}
+	
+	private function addFish(pPosition:Point):Void {
+		var lFish:Fish = new Fish(1);
+		containerFish.addChild(lFish);
+		lFish.position.set(pPosition.x, pPosition.y);
+		lFish.start();
+		listFish.push(lFish);
 	}
 	
 	public function destroyEat(pEat:Eat):Void {
@@ -98,6 +130,11 @@ class LevelManager
 		var lEat:Eat;
 		for (lEat in listEat) {
 			lEat.doAction();
+		}
+		
+		var lFish:Fish;
+		for (lFish in listFish) {
+			lFish.doAction();
 		}
 	}
 	

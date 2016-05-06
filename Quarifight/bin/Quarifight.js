@@ -688,6 +688,8 @@ com_gloyer_quarifight_game_GameManager.prototype = {
 };
 var com_gloyer_quarifight_game_LevelManager = function() {
 	this.container = new PIXI.Container();
+	this.containerEat = new PIXI.Container();
+	this.containerFish = new PIXI.Container();
 };
 $hxClasses["com.gloyer.quarifight.game.LevelManager"] = com_gloyer_quarifight_game_LevelManager;
 com_gloyer_quarifight_game_LevelManager.__name__ = ["com","gloyer","quarifight","game","LevelManager"];
@@ -701,9 +703,18 @@ com_gloyer_quarifight_game_LevelManager.prototype = {
 	}
 	,start: function() {
 		this.startLevel(1);
-		this.container.addChild(this.currentBackground);
+		this.initContainer();
+		this.test();
 		com_gloyer_libs_MouseController.getInstance().start(com_isartdigital_utils_game_GameStage.getInstance().getGameContainer(),100);
 		this.initEvent();
+	}
+	,test: function() {
+		this.addFish(new PIXI.Point(50,50));
+	}
+	,initContainer: function() {
+		this.container.addChild(this.currentBackground);
+		this.container.addChild(this.containerEat);
+		this.container.addChild(this.containerFish);
 	}
 	,startLevel: function(pLevel) {
 		this.currentLevel = pLevel;
@@ -712,6 +723,7 @@ com_gloyer_quarifight_game_LevelManager.prototype = {
 	}
 	,resetParamLevel: function() {
 		this.listEat = [];
+		this.listFish = [];
 	}
 	,changeBackground: function() {
 		this.currentBackground = new com_gloyer_quarifight_game_sprites_LevelBackground(this.currentLevel);
@@ -720,11 +732,21 @@ com_gloyer_quarifight_game_LevelManager.prototype = {
 		com_gloyer_libs_MouseController.getInstance().on("MOUSE CLICK EVENT",$bind(this,this.clickInLevel));
 	}
 	,clickInLevel: function(pPosition) {
+		this.addEat(pPosition);
+	}
+	,addEat: function(pPosition) {
 		var eat = new com_gloyer_quarifight_game_sprites_Eat(1);
-		this.container.addChild(eat);
+		this.containerEat.addChild(eat);
 		eat.position.set(pPosition.x,pPosition.y);
 		eat.start();
 		this.listEat.push(eat);
+	}
+	,addFish: function(pPosition) {
+		var lFish = new com_gloyer_quarifight_game_sprites_Fish(1);
+		this.containerFish.addChild(lFish);
+		lFish.position.set(pPosition.x,pPosition.y);
+		lFish.start();
+		this.listFish.push(lFish);
 	}
 	,destroyEat: function(pEat) {
 		HxOverrides.remove(this.listEat,pEat);
@@ -739,6 +761,14 @@ com_gloyer_quarifight_game_LevelManager.prototype = {
 			var lEat1 = _g1[_g];
 			++_g;
 			lEat1.doAction();
+		}
+		var lFish;
+		var _g2 = 0;
+		var _g11 = this.listFish;
+		while(_g2 < _g11.length) {
+			var lFish1 = _g11[_g2];
+			++_g2;
+			lFish1.doAction();
 		}
 	}
 	,destroy: function() {
@@ -953,7 +983,10 @@ $hxClasses["com.gloyer.quarifight.game.sprites.Eat"] = com_gloyer_quarifight_gam
 com_gloyer_quarifight_game_sprites_Eat.__name__ = ["com","gloyer","quarifight","game","sprites","Eat"];
 com_gloyer_quarifight_game_sprites_Eat.__super__ = com_isartdigital_utils_game_StateGraphic;
 com_gloyer_quarifight_game_sprites_Eat.prototype = $extend(com_isartdigital_utils_game_StateGraphic.prototype,{
-	startDestroyEat: function() {
+	changeSpeedAnimation: function() {
+		(js_Boot.__cast(this.anim , pixi_display_FlumpMovie)).animationSpeed = com_gloyer_quarifight_game_sprites_Eat.SPEED_ANIMATION;
+	}
+	,startDestroyEat: function() {
 		var lTween = TweenLite.fromTo(this,com_gloyer_quarifight_game_sprites_Eat.DURATION_ALPHA_ZERO,{ alpha : 1},{ alpha : 0, ease : Power0.easeIn, onComplete : $bind(this,this.destroyMe)});
 	}
 	,destroyMe: function() {
@@ -961,6 +994,10 @@ com_gloyer_quarifight_game_sprites_Eat.prototype = $extend(com_isartdigital_util
 	}
 	,fall: function() {
 		if(this.y < com_gloyer_quarifight_game_LevelManager.DISTANCE_TOP_GROUND) this.position.y += com_gloyer_quarifight_game_sprites_Eat.SPEED_FALL;
+	}
+	,start: function() {
+		com_isartdigital_utils_game_StateGraphic.prototype.start.call(this);
+		this.changeSpeedAnimation();
 	}
 	,doActionNormal: function() {
 		this.fall();
@@ -970,6 +1007,28 @@ com_gloyer_quarifight_game_sprites_Eat.prototype = $extend(com_isartdigital_util
 		com_isartdigital_utils_game_StateGraphic.prototype.setModeNormal.call(this);
 	}
 	,__class__: com_gloyer_quarifight_game_sprites_Eat
+});
+var com_gloyer_quarifight_game_sprites_Fish = function(pLevel) {
+	com_isartdigital_utils_game_StateGraphic.call(this);
+	this.factory = new com_isartdigital_utils_game_factory_FlumpMovieAnimFactory();
+	this.level = pLevel;
+};
+$hxClasses["com.gloyer.quarifight.game.sprites.Fish"] = com_gloyer_quarifight_game_sprites_Fish;
+com_gloyer_quarifight_game_sprites_Fish.__name__ = ["com","gloyer","quarifight","game","sprites","Fish"];
+com_gloyer_quarifight_game_sprites_Fish.__super__ = com_isartdigital_utils_game_StateGraphic;
+com_gloyer_quarifight_game_sprites_Fish.prototype = $extend(com_isartdigital_utils_game_StateGraphic.prototype,{
+	changeSpeedAnimation: function() {
+		(js_Boot.__cast(this.anim , pixi_display_FlumpMovie)).animationSpeed = com_gloyer_quarifight_game_sprites_Fish.SPEED_ANIMATION;
+	}
+	,start: function() {
+		com_isartdigital_utils_game_StateGraphic.prototype.start.call(this);
+		this.changeSpeedAnimation();
+	}
+	,setModeNormal: function() {
+		this.setState("lvl" + this.level,true);
+		com_isartdigital_utils_game_StateGraphic.prototype.setModeNormal.call(this);
+	}
+	,__class__: com_gloyer_quarifight_game_sprites_Fish
 });
 var com_gloyer_quarifight_game_sprites_LevelBackground = function(pLevel) {
 	com_isartdigital_utils_game_StateGraphic.call(this);
@@ -3704,6 +3763,8 @@ com_gloyer_quarifight_game_sprites_Eat.DEFAULT_SCALE = 1;
 com_gloyer_quarifight_game_sprites_Eat.SPEED_FALL = 2;
 com_gloyer_quarifight_game_sprites_Eat.DURATION_ALIVE = 8;
 com_gloyer_quarifight_game_sprites_Eat.DURATION_ALPHA_ZERO = 1;
+com_gloyer_quarifight_game_sprites_Eat.SPEED_ANIMATION = 0.7;
+com_gloyer_quarifight_game_sprites_Fish.SPEED_ANIMATION = 0.7;
 com_isartdigital_utils_Config.cache = true;
 com_isartdigital_utils_Config._data = { };
 com_isartdigital_utils_Debug.QR_SIZE = 0.35;

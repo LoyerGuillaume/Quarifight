@@ -7,6 +7,7 @@ import com.isartdigital.utils.game.StateGraphic;
 import haxe.Timer;
 import com.greensock.TweenLite;
 import pixi.core.math.Point;
+import pixi.display.FlumpMovie;
 import tween.easing.Power0;
 
 /**
@@ -22,11 +23,13 @@ class Eat extends StateGraphic
 	private static var SPEED_FALL:Int = 2;
 	private static var DURATION_ALIVE:Int = 8;
 	private static var DURATION_ALPHA_ZERO:Int = 1;
+	private static var SPEED_ANIMATION:Float = 0.7;
 	
 	public function new(pLevel:Int) 
 	{
 		super();
 		factory = new FlumpMovieAnimFactory();
+		
 		
 		level = pLevel;
 		
@@ -35,6 +38,10 @@ class Eat extends StateGraphic
 		
 		TimerDelay.getInstance().startDelay("startDestroyEat" + idEat++, DURATION_ALIVE * 1000, startDestroyEat);
 		//boxType = BoxType.SIMPLE;
+	}
+	
+	private function changeSpeedAnimation():Void {
+		cast(anim, FlumpMovie).animationSpeed = SPEED_ANIMATION;
 	}
 	
 	private function startDestroyEat():Void {
@@ -49,6 +56,13 @@ class Eat extends StateGraphic
 		if (y < LevelManager.DISTANCE_TOP_GROUND) {
 			position.y += SPEED_FALL;			
 		}
+	}
+	
+	override public function start():Void 
+	{
+		super.start();
+		changeSpeedAnimation();
+		
 	}
 
 	override function doActionNormal():Void {
