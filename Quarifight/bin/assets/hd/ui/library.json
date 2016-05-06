@@ -1,17 +1,17 @@
 {
- "frameRate": 30,
+ "isNamespaced": false,
  "textureGroups": [
   {
-   "scaleFactor": 1,
    "atlases": [
     {
-     "textures": [],
-     "file": "atlas0.png"
+     "file": "atlas0.png",
+     "textures": []
     }
-   ]
+   ],
+   "scaleFactor": 1
   }
  ],
  "movies": [],
  "md5": "a4e6a0ff410912a5ce79516de61fae66",
- "isNamespaced": false
+ "frameRate": 30
 }

@@ -19,7 +19,7 @@ class Eat extends StateGraphic
 	private var level:Int;
 	
 	private static var idEat:Int = 0;
-	private static var DEFAULT_SCALE:Int = 1;
+	private static var DEFAULT_SCALE:Float = 0.6;
 	private static var SPEED_FALL:Int = 2;
 	private static var DURATION_ALIVE:Int = 8;
 	private static var DURATION_ALPHA_ZERO:Int = 1;

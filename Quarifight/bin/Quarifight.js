@@ -408,6 +408,15 @@ _$UInt_UInt_$Impl_$.toFloat = function(this1) {
 	var $int = this1;
 	if($int < 0) return 4294967296.0 + $int; else return $int + 0.0;
 };
+var com_gloyer_libs_MathPerso = function() { };
+$hxClasses["com.gloyer.libs.MathPerso"] = com_gloyer_libs_MathPerso;
+com_gloyer_libs_MathPerso.__name__ = ["com","gloyer","libs","MathPerso"];
+com_gloyer_libs_MathPerso.getRandomFloat = function(pMin,pMax) {
+	return pMin + Math.random() * (pMax - pMin);
+};
+com_gloyer_libs_MathPerso.getRandomInt = function(pMin,pMax) {
+	return Math.round(com_gloyer_libs_MathPerso.getRandomFloat(pMin,pMax));
+};
 var com_gloyer_libs_MouseController = function() {
 	this.numberOfMovementScroll = 0;
 	this.scrollingMode = false;
@@ -1011,17 +1020,46 @@ com_gloyer_quarifight_game_sprites_Eat.prototype = $extend(com_isartdigital_util
 var com_gloyer_quarifight_game_sprites_Fish = function(pLevel) {
 	com_isartdigital_utils_game_StateGraphic.call(this);
 	this.factory = new com_isartdigital_utils_game_factory_FlumpMovieAnimFactory();
+	this.scale = new PIXI.Point(0.8,0.8);
 	this.level = pLevel;
+	this.id = com_gloyer_quarifight_game_sprites_Fish.idFish++;
+	this.orientationLeft = true;
 };
 $hxClasses["com.gloyer.quarifight.game.sprites.Fish"] = com_gloyer_quarifight_game_sprites_Fish;
 com_gloyer_quarifight_game_sprites_Fish.__name__ = ["com","gloyer","quarifight","game","sprites","Fish"];
 com_gloyer_quarifight_game_sprites_Fish.__super__ = com_isartdigital_utils_game_StateGraphic;
 com_gloyer_quarifight_game_sprites_Fish.prototype = $extend(com_isartdigital_utils_game_StateGraphic.prototype,{
 	changeSpeedAnimation: function() {
-		(js_Boot.__cast(this.anim , pixi_display_FlumpMovie)).animationSpeed = com_gloyer_quarifight_game_sprites_Fish.SPEED_ANIMATION;
+		(js_Boot.__cast(this.anim , pixi_display_FlumpMovie)).animationSpeed = 0.7;
+	}
+	,changeOrientation: function() {
+		this.anim.scale.x *= -1;
+	}
+	,startRandomTargetMovement: function() {
+		var lPositionTarget = this.getRandomPositionMovement();
+		console.log(lPositionTarget.x - this.x);
+		var nextOrientationIsLeft = lPositionTarget.x - this.x <= 0;
+		if(nextOrientationIsLeft != this.orientationLeft) {
+			this.changeOrientation();
+			this.orientationLeft = nextOrientationIsLeft;
+		}
+		this.tweenMovement = TweenLite.fromTo(this,this.getRandomDurationMovement(),{ x : this.x, y : this.y},{ x : lPositionTarget.x, y : lPositionTarget.y, ease : Power2.easeOut, onComplete : $bind(this,this.waitForMove)});
+	}
+	,waitForMove: function() {
+		com_gloyer_libs_TimerDelay.getInstance().startDelay("Movement Fish " + this.id,this.getRandomDurationWaitMovement(),$bind(this,this.startRandomTargetMovement));
+	}
+	,getRandomDurationWaitMovement: function() {
+		return com_gloyer_libs_MathPerso.getRandomInt(1,3) * 1000;
+	}
+	,getRandomDurationMovement: function() {
+		return com_gloyer_libs_MathPerso.getRandomFloat(3,6);
+	}
+	,getRandomPositionMovement: function() {
+		return new PIXI.Point(com_gloyer_libs_MathPerso.getRandomInt(-1200,1200),com_gloyer_libs_MathPerso.getRandomInt(-450,500));
 	}
 	,start: function() {
 		com_isartdigital_utils_game_StateGraphic.prototype.start.call(this);
+		this.startRandomTargetMovement();
 		this.changeSpeedAnimation();
 	}
 	,setModeNormal: function() {
@@ -3759,12 +3797,22 @@ com_gloyer_quarifight_game_LevelManager.DISTANCE_TOP_GROUND = 500;
 com_isartdigital_utils_game_StateGraphic.animAlpha = 1;
 com_isartdigital_utils_game_StateGraphic.boxAlpha = 0;
 com_gloyer_quarifight_game_sprites_Eat.idEat = 0;
-com_gloyer_quarifight_game_sprites_Eat.DEFAULT_SCALE = 1;
+com_gloyer_quarifight_game_sprites_Eat.DEFAULT_SCALE = 0.6;
 com_gloyer_quarifight_game_sprites_Eat.SPEED_FALL = 2;
 com_gloyer_quarifight_game_sprites_Eat.DURATION_ALIVE = 8;
 com_gloyer_quarifight_game_sprites_Eat.DURATION_ALPHA_ZERO = 1;
 com_gloyer_quarifight_game_sprites_Eat.SPEED_ANIMATION = 0.7;
+com_gloyer_quarifight_game_sprites_Fish.idFish = 0;
 com_gloyer_quarifight_game_sprites_Fish.SPEED_ANIMATION = 0.7;
+com_gloyer_quarifight_game_sprites_Fish.DEFAULT_SCALE = 0.8;
+com_gloyer_quarifight_game_sprites_Fish.MIN_DURATION_MOVEMENT = 3;
+com_gloyer_quarifight_game_sprites_Fish.MAX_DURATION_MOVEMENT = 6;
+com_gloyer_quarifight_game_sprites_Fish.MIN_DURATION_WAIT_MOVEMENT = 1;
+com_gloyer_quarifight_game_sprites_Fish.MAX_DURATION_WAIT_MOVEMENT = 3;
+com_gloyer_quarifight_game_sprites_Fish.MIN_MOVEMENT_X = -1200;
+com_gloyer_quarifight_game_sprites_Fish.MIN_MOVEMENT_Y = -450;
+com_gloyer_quarifight_game_sprites_Fish.MAX_MOVEMENT_X = 1200;
+com_gloyer_quarifight_game_sprites_Fish.MAX_MOVEMENT_Y = 500;
 com_isartdigital_utils_Config.cache = true;
 com_isartdigital_utils_Config._data = { };
 com_isartdigital_utils_Debug.QR_SIZE = 0.35;
