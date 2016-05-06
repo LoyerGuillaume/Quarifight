@@ -478,47 +478,90 @@ com_gloyer_libs_TimerDelay.getInstance = function() {
 };
 com_gloyer_libs_TimerDelay.__super__ = EventEmitter;
 com_gloyer_libs_TimerDelay.prototype = $extend(EventEmitter.prototype,{
-	startDelay: function(pNameEvent,pDurationMs,pCallback) {
-		var lNameEvent = "TIMER DELAY EVENT" + " " + pNameEvent;
-		var value = { timer : this.createTimerDelay(lNameEvent,pDurationMs,pCallback), startTimestampMs : this.getStampInMillisecond(), durationMs : pDurationMs};
-		this.listTimerDelay.set(lNameEvent,value);
-		if(pCallback != null) this.listTimerDelay.get(lNameEvent).callback = pCallback;
+	getNameEvent: function(pNameEvent) {
+		return "TIMER DELAY EVENT" + " " + pNameEvent;
+	}
+	,startDelay: function(pNameEvent,pDurationMs,pCallback) {
+		var _g = this;
+		var lNameEvent = this.getNameEvent(pNameEvent);
+		this.addTimerDelay(lNameEvent,pDurationMs,function() {
+			if(pCallback != null) pCallback();
+			_g.stopDelay(lNameEvent);
+		});
 		return lNameEvent;
 	}
-	,createTimerDelay: function(pNameEvent,pDurationMs,pCallback) {
+	,startRepeaterDelay: function(pNameEvent,pDurationRepeaterMs,pCallback) {
 		var _g = this;
-		var lDelay = haxe_Timer.delay(function() {
-			if(_g.listTimerDelay.get(pNameEvent).callback != null) _g.listTimerDelay.get(pNameEvent).callback();
-			_g.emit(pNameEvent);
-			_g.listTimerDelay.remove(pNameEvent);
-		},pDurationMs);
-		return lDelay;
+		var lNameEvent = this.getNameEvent(pNameEvent);
+		this.addTimerDelay(lNameEvent,pDurationRepeaterMs,function() {
+			if(pCallback != null) pCallback();
+			_g.stopDelay(lNameEvent);
+			_g.startRepeaterDelay(pNameEvent,pDurationRepeaterMs,pCallback);
+		});
+		return lNameEvent;
 	}
 	,pauseAllDelay: function() {
 		var lNameDelay;
-		var lDelay;
 		var $it0 = this.listTimerDelay.keys();
 		while( $it0.hasNext() ) {
 			var lNameDelay1 = $it0.next();
-			lDelay = this.listTimerDelay.get(lNameDelay1);
-			lDelay.timer.stop();
-			lDelay.timer = null;
+			this.pauseDelay(lNameDelay1);
+		}
+	}
+	,pauseDelay: function(pNameEvent) {
+		var lTimerDelay = this.listTimerDelay.get(pNameEvent);
+		if(!lTimerDelay.inPause) {
+			var pNewDurationDelay = Math.round(lTimerDelay.durationMs - (this.getStampInMillisecond() - lTimerDelay.startTimestampMs));
+			console.log(this.getStampInMillisecond() - lTimerDelay.startTimestampMs);
+			lTimerDelay.durationMs = pNewDurationDelay;
+			lTimerDelay.timer.stop();
+			lTimerDelay.timer = null;
+			lTimerDelay.inPause = true;
+			console.log(lTimerDelay);
 		}
 	}
 	,resumeAllDelay: function() {
 		var lNameDelay;
-		var lDelay;
 		var $it0 = this.listTimerDelay.keys();
 		while( $it0.hasNext() ) {
 			var lNameDelay1 = $it0.next();
-			lDelay = this.listTimerDelay.get(lNameDelay1);
-			var pNewDurationDelay = Math.round(lDelay.durationMs - (this.getStampInMillisecond() - lDelay.startTimestampMs));
-			console.log(pNewDurationDelay);
-			lDelay.timer = this.createTimerDelay(lNameDelay1,pNewDurationDelay,lDelay.callback);
+			this.resumeDelay(lNameDelay1);
 		}
 	}
+	,resumeDelay: function(pNameDelay) {
+		var lTimerDelay = this.listTimerDelay.get(pNameDelay);
+		if(lTimerDelay.inPause) {
+			lTimerDelay.timer = this.createTimerDelay(pNameDelay,lTimerDelay.durationMs,lTimerDelay.callback);
+			lTimerDelay.inPause = false;
+		}
+	}
+	,stopAllDelay: function() {
+		var lNameDelay;
+		var $it0 = this.listTimerDelay.keys();
+		while( $it0.hasNext() ) {
+			var lNameDelay1 = $it0.next();
+			this.stopDelay(lNameDelay1);
+		}
+	}
+	,stopDelay: function(pNameEvent) {
+		var lTimerDelay = this.listTimerDelay.get(pNameEvent);
+		lTimerDelay.timer.stop();
+		this.listTimerDelay.remove(pNameEvent);
+	}
 	,getStampInMillisecond: function() {
-		return Std["int"](haxe_Timer.stamp() * 1000);
+		return Math.round(haxe_Timer.stamp() * 1000);
+	}
+	,addTimerDelay: function(pNameEvent,pDurationMs,pCallback) {
+		var value = { callback : pCallback, timer : this.createTimerDelay(pNameEvent,pDurationMs,pCallback), startTimestampMs : this.getStampInMillisecond(), durationMs : pDurationMs, inPause : false};
+		this.listTimerDelay.set(pNameEvent,value);
+	}
+	,createTimerDelay: function(pNameEvent,pDurationMs,pCallback) {
+		var _g = this;
+		var lDelay = haxe_Timer.delay(function() {
+			_g.emit(pNameEvent);
+			pCallback();
+		},pDurationMs);
+		return lDelay;
 	}
 	,destroy: function() {
 		com_gloyer_libs_TimerDelay.instance = null;
@@ -650,13 +693,16 @@ com_gloyer_quarifight_game_LevelManager.prototype = {
 		this.startLevel(1);
 		this.container.addChild(this.currentBackground);
 		console.log("Start timer");
-		com_gloyer_libs_TimerDelay.getInstance().startDelay("Test",2000,function() {
+		haxe_Timer.delay(function() {
+			com_gloyer_libs_TimerDelay.getInstance().pauseAllDelay();
+			haxe_Timer.delay(function() {
+				com_gloyer_libs_TimerDelay.getInstance().resumeAllDelay();
+			},1000);
+		},1000);
+		var lNameEvent = com_gloyer_libs_TimerDelay.getInstance().startDelay("test",5000);
+		com_gloyer_libs_TimerDelay.getInstance().on(lNameEvent,function(pEvent) {
 			console.log("Bonjour");
 		});
-		com_gloyer_libs_TimerDelay.getInstance().pauseAllDelay();
-		haxe_Timer.delay(function() {
-			com_gloyer_libs_TimerDelay.getInstance().resumeAllDelay();
-		},1000);
 		com_gloyer_libs_MouseController.getInstance().start(com_isartdigital_utils_game_GameStage.getInstance().getGameContainer());
 		this.initEvent();
 	}

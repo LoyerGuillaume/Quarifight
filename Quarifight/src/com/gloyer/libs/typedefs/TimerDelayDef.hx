@@ -11,5 +11,6 @@ typedef TimerDelayDef =
 	var timer:Timer;
 	var startTimestampMs:Int;
 	var durationMs:Int;
+	var inPause:Bool;
 	@:optional var callback:Void->Void;
 }

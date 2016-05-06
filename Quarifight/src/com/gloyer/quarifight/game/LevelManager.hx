@@ -53,18 +53,7 @@ class LevelManager
 		container.addChild(currentBackground);
 		
 		trace("Start timer");
-		TimerDelay.getInstance().startDelay("Test", 2000, function () {
-			trace("Bonjour");
-		});
-		
-		TimerDelay.getInstance().pauseAllDelay();
-		
-		Timer.delay(function () {
-			TimerDelay.getInstance().resumeAllDelay();			
-		}, 1000);
-		
-		//var lNameEvent:String = TimerDelay.getInstance().startDelay("test", 2000);
-		//TimerDelay.getInstance().on(lNameEvent, function(pEvent:Dynamic) {
+		//TimerDelay.getInstance().on(TimerDelay.getInstance().startRepeaterDelay("Test", 2000), function (pEvent:Dynamic) {
 			//trace("Bonjour");
 		//});
 		//
@@ -73,6 +62,21 @@ class LevelManager
 		//Timer.delay(function () {
 			//TimerDelay.getInstance().resumeAllDelay();			
 		//}, 1000);
+		
+		
+		Timer.delay(function () {
+			TimerDelay.getInstance().pauseAllDelay();
+			Timer.delay(function () {
+				TimerDelay.getInstance().resumeAllDelay();				
+			}, 1000);
+		}, 1000);
+		
+		var lNameEvent:String = TimerDelay.getInstance().startDelay("test", 5000);
+		TimerDelay.getInstance().on(lNameEvent, function(pEvent:Dynamic) {
+			trace("Bonjour");
+		});
+		//
+		//
 		
 		
 		//var lTest:Timer = Timer.delay(test, 10000);
