@@ -417,6 +417,9 @@ com_gloyer_libs_MathPerso.getRandomFloat = function(pMin,pMax) {
 com_gloyer_libs_MathPerso.getRandomInt = function(pMin,pMax) {
 	return Math.round(com_gloyer_libs_MathPerso.getRandomFloat(pMin,pMax));
 };
+com_gloyer_libs_MathPerso.getRandomPoint = function(pMinX,pMaxX,pMinY,pMaxY) {
+	return new PIXI.Point(com_gloyer_libs_MathPerso.getRandomInt(pMinX,pMaxX),com_gloyer_libs_MathPerso.getRandomInt(pMinY,pMaxY));
+};
 var com_gloyer_libs_MouseController = function() {
 	this.numberOfMovementScroll = 0;
 	this.scrollingMode = false;
@@ -718,6 +721,10 @@ com_gloyer_quarifight_game_LevelManager.prototype = {
 		this.initEvent();
 	}
 	,test: function() {
+		this.addFish(new PIXI.Point(50,50));
+		this.addFish(new PIXI.Point(50,50));
+		this.addFish(new PIXI.Point(50,50));
+		this.addFish(new PIXI.Point(50,50));
 		this.addFish(new PIXI.Point(50,50));
 	}
 	,initContainer: function() {
@@ -1043,19 +1050,20 @@ com_gloyer_quarifight_game_sprites_Fish.prototype = $extend(com_isartdigital_uti
 			this.changeOrientation();
 			this.orientationLeft = nextOrientationIsLeft;
 		}
-		this.tweenMovement = TweenLite.fromTo(this,this.getRandomDurationMovement(),{ x : this.x, y : this.y},{ x : lPositionTarget.x, y : lPositionTarget.y, ease : Power2.easeOut, onComplete : $bind(this,this.waitForMove)});
+		this.tweenMovement = TweenLite.fromTo(this,this.getRandomDurationMovement(),{ x : this.x, y : this.y},{ x : lPositionTarget.x, y : lPositionTarget.y, ease : Power1.easeInOut, onComplete : $bind(this,this.waitForMove)});
 	}
 	,waitForMove: function() {
 		com_gloyer_libs_TimerDelay.getInstance().startDelay("Movement Fish " + this.id,this.getRandomDurationWaitMovement(),$bind(this,this.startRandomTargetMovement));
 	}
 	,getRandomDurationWaitMovement: function() {
-		return com_gloyer_libs_MathPerso.getRandomInt(1,3) * 1000;
+		return com_gloyer_libs_MathPerso.getRandomInt(1,2) * 1000;
 	}
 	,getRandomDurationMovement: function() {
 		return com_gloyer_libs_MathPerso.getRandomFloat(3,6);
 	}
 	,getRandomPositionMovement: function() {
-		return new PIXI.Point(com_gloyer_libs_MathPerso.getRandomInt(-1200,1200),com_gloyer_libs_MathPerso.getRandomInt(-450,500));
+		var lPosition = com_gloyer_libs_MathPerso.getRandomPoint(-1200,1200,-450,500);
+		return lPosition;
 	}
 	,start: function() {
 		com_isartdigital_utils_game_StateGraphic.prototype.start.call(this);
@@ -3808,7 +3816,7 @@ com_gloyer_quarifight_game_sprites_Fish.DEFAULT_SCALE = 0.8;
 com_gloyer_quarifight_game_sprites_Fish.MIN_DURATION_MOVEMENT = 3;
 com_gloyer_quarifight_game_sprites_Fish.MAX_DURATION_MOVEMENT = 6;
 com_gloyer_quarifight_game_sprites_Fish.MIN_DURATION_WAIT_MOVEMENT = 1;
-com_gloyer_quarifight_game_sprites_Fish.MAX_DURATION_WAIT_MOVEMENT = 3;
+com_gloyer_quarifight_game_sprites_Fish.MAX_DURATION_WAIT_MOVEMENT = 2;
 com_gloyer_quarifight_game_sprites_Fish.MIN_MOVEMENT_X = -1200;
 com_gloyer_quarifight_game_sprites_Fish.MIN_MOVEMENT_Y = -450;
 com_gloyer_quarifight_game_sprites_Fish.MAX_MOVEMENT_X = 1200;

@@ -71,6 +71,10 @@ class LevelManager
 	
 	private function test():Void {
 		addFish(new Point(50, 50));
+		addFish(new Point(50, 50));
+		addFish(new Point(50, 50));
+		addFish(new Point(50, 50));
+		addFish(new Point(50, 50));
 		
 	}
 	

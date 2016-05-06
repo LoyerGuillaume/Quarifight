@@ -30,7 +30,7 @@ class Fish extends StateGraphic
 	private static inline var MAX_DURATION_MOVEMENT:Float = 6;
 	
 	private static inline var MIN_DURATION_WAIT_MOVEMENT:Float = 1;
-	private static inline var MAX_DURATION_WAIT_MOVEMENT:Float = 3;
+	private static inline var MAX_DURATION_WAIT_MOVEMENT:Float = 2;
 	
 	//FIXME : Use Bounding box mais pas dans le poisson
 	private static inline var MIN_MOVEMENT_X:Int = -1200;
@@ -75,7 +75,7 @@ class Fish extends StateGraphic
 			orientationLeft = nextOrientationIsLeft;
 		}
 		
-		tweenMovement = TweenLite.fromTo(this, getRandomDurationMovement(), {x: x, y: y}, {x: lPositionTarget.x, y: lPositionTarget.y, ease: Power2.easeOut, onComplete: waitForMove});
+		tweenMovement = TweenLite.fromTo(this, getRandomDurationMovement(), {x: x, y: y}, {x: lPositionTarget.x, y: lPositionTarget.y, ease: Power1.easeInOut, onComplete: waitForMove});
 	}
 	
 	private function waitForMove():Void {
@@ -91,7 +91,9 @@ class Fish extends StateGraphic
 	}
 	
 	private function getRandomPositionMovement():Point {
-		return new Point(MathPerso.getRandomInt(MIN_MOVEMENT_X, MAX_MOVEMENT_X), MathPerso.getRandomInt(MIN_MOVEMENT_Y, MAX_MOVEMENT_Y));
+		var lPosition:Point = MathPerso.getRandomPoint(MIN_MOVEMENT_X, MAX_MOVEMENT_X, MIN_MOVEMENT_Y, MAX_MOVEMENT_Y);
+		return lPosition;
+		//return new Point(MathPerso.getRandomInt(MIN_MOVEMENT_X, MAX_MOVEMENT_X), MathPerso.getRandomInt(MIN_MOVEMENT_Y, MAX_MOVEMENT_Y));
 	}
 	
 	
