@@ -167,7 +167,7 @@ class TimerDelay extends EventEmitter
 	}
 	
 	
-	private function getStampInMillisecond():Int {
+	private function getStampInMillisecond():Int {		
 		return Math.round(Timer.stamp() * 1000);
 	}
 	

@@ -63,31 +63,27 @@ class LevelManager
 			//TimerDelay.getInstance().resumeAllDelay();			
 		//}, 1000);
 		
-		
-		Timer.delay(function () {
-			TimerDelay.getInstance().pauseAllDelay();
-			Timer.delay(function () {
-				TimerDelay.getInstance().resumeAllDelay();				
-			}, 1000);
-		}, 1000);
+		//
+		//Timer.delay(function () {
+			//TimerDelay.getInstance().pauseAllDelay();
+			//Timer.delay(function () {
+				//TimerDelay.getInstance().resumeAllDelay();				
+			//}, 1000);
+		//}, 1000);
 		
 		var lNameEvent:String = TimerDelay.getInstance().startDelay("test", 5000);
 		TimerDelay.getInstance().on(lNameEvent, function(pEvent:Dynamic) {
 			trace("Bonjour");
 		});
-		//
-		//
-		
-		
-		//var lTest:Timer = Timer.delay(test, 10000);
-		//lTest.run();
-		
-		//
-		//var eat:Eat = new Eat(1);
-		//container.addChild(eat);
-		//eat.start();
-		//
-		
+
+		TimerDelay.getInstance().startDelay("test2", 2000, function () {
+			TimerDelay.getInstance().pauseDelay(lNameEvent);
+			//TimerDelay.getInstance().pauseAllDelay();
+			TimerDelay.getInstance().startDelay("test3", 1000, function () {
+				TimerDelay.getInstance().resumeDelay(lNameEvent);				
+				//TimerDelay.getInstance().resumeAllDelay();				
+			});
+		});
 		
 		MouseController.getInstance().start(GameStage.getInstance().getGameContainer());
 		initEvent();

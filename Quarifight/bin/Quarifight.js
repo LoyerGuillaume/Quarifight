@@ -693,15 +693,15 @@ com_gloyer_quarifight_game_LevelManager.prototype = {
 		this.startLevel(1);
 		this.container.addChild(this.currentBackground);
 		console.log("Start timer");
-		haxe_Timer.delay(function() {
-			com_gloyer_libs_TimerDelay.getInstance().pauseAllDelay();
-			haxe_Timer.delay(function() {
-				com_gloyer_libs_TimerDelay.getInstance().resumeAllDelay();
-			},1000);
-		},1000);
 		var lNameEvent = com_gloyer_libs_TimerDelay.getInstance().startDelay("test",5000);
 		com_gloyer_libs_TimerDelay.getInstance().on(lNameEvent,function(pEvent) {
 			console.log("Bonjour");
+		});
+		com_gloyer_libs_TimerDelay.getInstance().startDelay("test2",2000,function() {
+			com_gloyer_libs_TimerDelay.getInstance().pauseDelay(lNameEvent);
+			com_gloyer_libs_TimerDelay.getInstance().startDelay("test3",1000,function() {
+				com_gloyer_libs_TimerDelay.getInstance().resumeDelay(lNameEvent);
+			});
 		});
 		com_gloyer_libs_MouseController.getInstance().start(com_isartdigital_utils_game_GameStage.getInstance().getGameContainer());
 		this.initEvent();
